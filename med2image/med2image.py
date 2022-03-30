@@ -218,8 +218,12 @@ class med2image(object):
 
         self._b_convertAllSlices        = False
         self.str_sliceToConvert         = ''
+        self.str_startSliceToConvert    = ''
+        self.str_endSliceToConvert      = ''
         self.str_frameToConvert         = ''
         self._sliceToConvert            = -1
+        self._startSliceToConvert       = -1
+        self._endSliceToConvert         = -1
         self._frameToConvert            = -1
 
         self.str_stdout                 = ""
@@ -249,6 +253,7 @@ class med2image(object):
         # Flags
         self._b_showSlices              = False
         self._b_convertMiddleSlice      = False
+        self._b_convertMiddleSlices     = False
         self._b_convertMiddleFrame      = False
         self._b_reslice                 = False
         self.func                       = None #transformation function
@@ -261,6 +266,8 @@ class med2image(object):
             if key == "outputFileStem":         self.str_outputFileStem     = value
             if key == "outputFileType":         self.str_outputFileType     = value
             if key == "sliceToConvert":         self.str_sliceToConvert     = value
+            if key == "startSliceToConvert":    self.str_startSliceToConvert= value
+            if key == "endSliceToConvert":      self.str_endSliceToConvert  = value
             if key == "frameToConvert":         self.str_frameToConvert     = value
             if key == "convertOnlySingleDICOM": self.convertOnlySingleDICOM = value
             if key == "showSlices":             self._b_showSlices          = value
@@ -276,6 +283,16 @@ class med2image(object):
             self._b_convertMiddleSlice = True
         elif len(self.str_sliceToConvert):
             self._sliceToConvert = int(self.str_sliceToConvert)
+        
+        if self.str_startSliceToConvert.lower() == 'm':
+            self._b_convertMiddleSlices = True
+        elif len(self.str_startSliceToConvert):
+            self._startSliceToConvert = int(self.str_startSliceToConvert)
+
+        if self.str_endSliceToConvert.lower() == 'm':
+            self._b_convertMiddleSlices = True
+        elif len(self.str_endSliceToConvert):
+            self._endSliceToConvert = int(self.str_endSliceToConvert)
 
         if len(self.str_inputDir):
             self.str_inputFile  = '%s/%s' % (self.str_inputDir, self.str_inputFile)
@@ -677,8 +694,13 @@ class med2image_nii(med2image):
             slices     = self._Vnp_3DVol.shape[2]
             if self._b_convertMiddleSlice:
                 self._sliceToConvert = int(slices/2)
-
-            if self._sliceToConvert == -1:
+            
+            print("[DEBUG]: Condition Check: "+str(self._startSliceToConvert)+" to "+str(self._endSliceToConvert))
+            if self._startSliceToConvert != -1 and self._endSliceToConvert != -1:
+                sliceStart  = self._startSliceToConvert
+                sliceEnd    = self._endSliceToConvert
+                print("[DEBUG]: Given Range: "+str(sliceStart)+" to "+str(sliceEnd))
+            elif self._sliceToConvert == -1:
                 sliceEnd    = -1
             else:
                 sliceStart  = self._sliceToConvert
@@ -757,6 +779,8 @@ class object_factoryCreate:
                 outputFileStem      = args.outputFileStem,
                 outputFileType      = args.outputFileType,
                 sliceToConvert      = args.sliceToConvert,
+                startSliceToConvert = args.startSliceToConvert,
+                endSliceToConvert   = args.endSliceToConvert,
                 frameToConvert      = args.frameToConvert,
                 showSlices          = args.showSlices,
                 reslice             = args.reslice
@@ -772,6 +796,8 @@ class object_factoryCreate:
                 outputFileStem          = args.outputFileStem,
                 outputFileType          = args.outputFileType,
                 sliceToConvert          = args.sliceToConvert,
+                startSliceToConvert     = args.startSliceToConvert,
+                endSliceToConvert       = args.endSliceToConvert,
                 convertOnlySingleDICOM  = args.convertOnlySingleDICOM,
                 reslice                 = args.reslice
             )
