@@ -1,3 +1,5 @@
+**ALERT**: Use **custom_convertor.py** (https://github.com/UntitledError-09/med2image/blob/master/custom_convertor.py) only
+
 med2image 2.2.10
 ==================
 
