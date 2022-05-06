@@ -1,4 +1,4 @@
-**ALERT**: Use **custom_convertor.py** (https://github.com/UntitledError-09/med2image/blob/master/custom_convertor.py) only
+**ALERT**: This fork only implements a recursive search algorithm to find all .nii files within deep subfolders and convert to image with a range of slices. This implementation is available in **recursive_iterative_convertor.py** (https://github.com/UntitledError-09/med2image/blob/master/recursive_iterative_convertor.py) only.
 
 med2image 2.2.10
 ==================
