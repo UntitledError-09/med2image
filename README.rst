@@ -1,6 +1,7 @@
+<<<<<<< HEAD
 **ALERT**: This fork only implements a recursive search algorithm to find all .nii files within deep subfolders and convert to image with a range of slices. This implementation is available in **recursive_iterative_convertor.py** (https://github.com/UntitledError-09/med2image/blob/master/recursive_iterative_convertor.py) only.
 
-med2image 2.2.10
+med2image 2.6.6
 ==================
 
 Quick Overview
@@ -55,7 +56,7 @@ Should you get an error about ``python3-tk`` not installed, simply do (for examp
 Docker container
 ~~~~~~~~~~~~~~~~
 
-We also offer a docker container of ``med2image`` as a ChRIS-conformant platform plugin here https://github.com/FNNDSC/pl-med2img -- please consult that page for information on running the dockerized container. The containerized version exposes a similar CLI and functionality as this module.
+We also offer a docker container of ``med2image`` as a ChRIS-conformant platform plugin here https://github.com/FNNDSC/pl-med2img (see also the closely related https://github.com/FNNDSC/pl-dcm2img that performs conversions down a directory tree recursively) -- please that reference for information on running the dockerized container. The containerized version exposes a similar CLI and functionality as this module.
 
 How to Use
 ----------
@@ -428,6 +429,12 @@ Command Line Arguments
         the named file. By default the script assumes that multiple DICOMS
         should be converted en mass otherwise.
 
+        [--preserveDICOMinputName]
+        If specified, use the input DICOM name as the stem of the output
+        filename, with the specified type ('jpg' or 'png') as the extension.
+        In the case where [--reslice] is additionally specified, only the
+        slice or 'z' direction will preserve original DICOM names.
+
         [-t|--outputFileType <outputFileType>]
         The output file type. If different to <outputFileStem> extension,
         will override extension in favour of <outputFileType>.
@@ -447,6 +454,17 @@ Command Line Arguments
         [--showSlices]
         If specified, render/show image slices as they are created.
 
+        [--rot <3DbinVector>]
+        A per dimension binary rotation vector. Useful to rotate individual
+        dimensions by an angle specified with [--rotAngle <angle>]. Default
+        is '110', i.e. rotate 'x' and 'y' but not 'z'. Note that for a
+        non-reslice selection, only the 'z' (or third) element of the vector
+        is used.
+
+        [--rotAngle <angle>]
+        Default 90 -- the rotation angle to apply to a given dimension of the
+        <3DbinVector>.
+
         [--func <functionName>]
         Apply the specified transformation function before saving. Currently
         support functions:
@@ -455,13 +473,17 @@ Command Line Arguments
               Inverts the contrast intensity of the source image.
 
         [--reslice]
-        For 3D data only. Assuming [i,j,k] coordinates, the default is to save
-        along the 'k' direction. By passing a --reslice image data in the 'i' and
-        'j' directions are also saved. Furthermore, the <outputDir> is subdivided into
-        'slice' (k), 'row' (i), and 'col' (j) subdirectories.
+        For 3D data only. Assuming [x,y,z] coordinates, the default is to save
+        along the 'z' direction. By passing a --reslice image data in the 'x'
+        and 'y' directions are also saved. Furthermore, the <outputDir> is
+        subdivided into 'slice' (z), 'row' (x), and 'col' (y) subdirectories.
 
         [-x|--man]
         Show full help.
 
         [-y|--synopsis]
         Show brief help.
+
+        [--verbosity <level=1>]
+        Control how chatty med2image is. Set to '0' for blissful silence, '1'
+        for sane progress and '3' for full information.
